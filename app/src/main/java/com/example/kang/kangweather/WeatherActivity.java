@@ -10,7 +10,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -23,6 +22,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.kang.kangweather.gson.Forecast;
 import com.example.kang.kangweather.gson.Weather;
+import com.example.kang.kangweather.service.AutoUpdateService;
 import com.example.kang.kangweather.util.HttpUtil;
 import com.example.kang.kangweather.util.Utility;
 
@@ -31,9 +31,6 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
-
-import static android.icu.lang.UCharacter.GraphemeClusterBreak.V;
-import static android.os.Build.VERSION_CODES.M;
 
 public class WeatherActivity extends AppCompatActivity {
 
@@ -57,11 +54,12 @@ public class WeatherActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        /*
         if(Build.VERSION.SDK_INT >=21){
             View decorView = getWindow().getDecorView();
             decorView.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
             getWindow().setStatusBarColor(Color.TRANSPARENT);
-        }
+        }*/
         setContentView(R.layout.activity_weather);
         //初始化各控件
         weatherLayout = (ScrollView) findViewById(R.id.weather_layout);
@@ -143,6 +141,7 @@ public class WeatherActivity extends AppCompatActivity {
                             editor.putString("weather", responseText);
                             editor.apply();
                             showWeatherInfo(weather);
+
                         }else {
                             Toast.makeText(WeatherActivity.this,"获取天气信息失败",Toast.LENGTH_SHORT).show();
                         }
@@ -201,7 +200,7 @@ public class WeatherActivity extends AppCompatActivity {
     /**
      * 处理并展示Weather实体类中的数据
      */
-    private void showWeatherInfo(Weather weather){
+    public void showWeatherInfo(Weather weather){
         String cityName = weather.basic.cityName;
         String updateTime = weather.basic.update.updateTime.split(" ")[1];
         String degree = weather.now.temperature + "℃";
@@ -234,5 +233,8 @@ public class WeatherActivity extends AppCompatActivity {
         carWashText.setText(carWash);
         sportText.setText(sport);
         weatherLayout.setVisibility(View.VISIBLE);
+        Intent intent = new Intent(WeatherActivity.this, AutoUpdateService.class);
+        startService(intent);
     }
+
 }
