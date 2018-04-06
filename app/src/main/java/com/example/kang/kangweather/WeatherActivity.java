@@ -88,7 +88,7 @@ public class WeatherActivity extends AppCompatActivity {
             weatherId = weather.basic.weatherId;
             showWeatherInfo(weather);
         }else{
-            //无缓存时去服务器查询天气
+            //无缓存时去服务器查询天气,无缓存说明还未选择城市，然后就会在点击区的时候传入weather_id
             weatherId = getIntent().getStringExtra("weather_id");
             weatherLayout.setVisibility(View.INVISIBLE);
             requestWeather(weatherId);
@@ -137,7 +137,8 @@ public class WeatherActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if( weather!=null && "ok".equals(weather.status)){
-                            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(WeatherActivity.this).edit();
+                            SharedPreferences.Editor editor = PreferenceManager.
+                                    getDefaultSharedPreferences(WeatherActivity.this).edit();
                             editor.putString("weather", responseText);
                             editor.apply();
                             showWeatherInfo(weather);

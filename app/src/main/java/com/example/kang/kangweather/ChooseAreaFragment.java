@@ -31,6 +31,8 @@ import okhttp3.Response;
 
 import android.os.Bundle; //添加这个bundle问题解决了
 
+import static android.R.attr.y;
+
 /**
  * Created by kang on 2018/3/27.
  */
@@ -109,7 +111,7 @@ public class ChooseAreaFragment extends Fragment {
                         intent.putExtra("weather_id",weatherId);
                         startActivity(intent);
                         getActivity().finish();
-                    }else  if(getActivity() instanceof WeatherActivity){
+                    }else if(getActivity() instanceof WeatherActivity){
                         WeatherActivity activity = (WeatherActivity)getActivity();
                         activity.drawerLayout.closeDrawers();
                         activity.swipeRefresh.setRefreshing(true);
